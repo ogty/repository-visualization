@@ -70,6 +70,9 @@ class GenerateTree:
                 if not url.startswith(path):
                     result["files"].append({"name": url.split("/")[-1]})
                     next_paths.append(url)
+                elif "/" in url.replace(path, ""):
+                    result["files"].append({"name": url.split("/")[-1]})
+                    next_paths.append(url)
 
         if not result["files"]:
             result.pop("files")
