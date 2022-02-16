@@ -3,34 +3,87 @@
 
 	let root = [
 		{
-			name: 'Important work stuff',
-			files: [
-				{ name: 'quarterly-results.xlsx' }
-			]
-		},
+			'name': 'settings.py'
+		}, 
 		{
-			name: 'Animal GIFs',
-			files: [
+			'name': 'src', 
+			'files': [
 				{
-					name: 'Dogs',
-					files: [
-						{ name: 'treadmill.gif' },
-						{ name: 'rope-jumping.gif' }
-					]
-				},
+					'name': 'README.md'
+				}, 
 				{
-					name: 'Goats',
-					files: [
-						{ name: 'parkour.gif' },
-						{ name: 'rampage.gif' }
-					]
-				},
-				{ name: 'cat-roomba.gif' },
-				{ name: 'duck-shuffle.gif' },
-				{ name: 'monkey-on-a-pig.gif' }
+					'name': 'analizer.py'
+				}, 
+				{
+					'name': 'bollinger_band_counter.py'
+				}, 
+				{
+					'name': 'code_acquisition.py'
+				}, 
+				{
+					'name': 'dataframe_slicer.py'
+				}, 
+				{
+					'name': 'download_update.py'
+				}, 
+				{
+					'name': 'historical_volatirity.py'
+				}, 
+				{
+					'name': 'loading.py'
+				}, 
+				{
+					'name': 'market_data_acquisition.py'
+				}, 
+				{
+					'name': 'market_trend.py'
+				}, 
+				{
+					'name': 'schedule_generator.py'
+				}, 
+				{
+					'name': 'stock_data_acquisition.py'
+				}, 
+				{
+					'name': 'text_length_counter.py'
+				}, 
+				{
+					'name': 'totalling.py'
+				}
 			]
-		},
-		{ name: 'TODO.md' }
+		}, 
+		{
+			'name': 'README.md'
+		}, 
+		{
+			'name': 'data', 
+			'files': [
+				{
+					'name': 'JP.csv'
+				}, 
+				{
+					'name': 'historical_volatility.png'
+				}, 
+				{
+					'name': 'sample.png'
+				}, 
+				{
+					'name': 'totalling_sample.png'
+				}, 
+				{
+					'name': 'totalling_template.txt'
+				}
+			]
+		}, 
+		{
+			'name': 'requirements.txt'
+		}, 
+		{
+			'name': '.gitignore'
+		}, 
+		{
+			'name': 'main.py'
+		}
 	];
 </script>
 
