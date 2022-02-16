@@ -66,6 +66,7 @@ class GenerateTree:
         next_paths = []
         for url in paths_for_repository:
             if eval(process_word):
+                # TODO: something
                 if not url.startswith(path):
                     result["files"].append({"name": url.split("/")[-1]})
                     next_paths.append(url)
@@ -76,8 +77,6 @@ class GenerateTree:
         parent = path.split("/")[-2] if path.split("/")[-2] != self.default_branch else self.repository_name
         if parent == self.repository_name:
             self.root[self.repository_name].append(result)
-
-        # TODO: else?
 
         for file in next_paths:
             self.below_second_level(file)
