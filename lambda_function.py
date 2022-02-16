@@ -57,7 +57,7 @@ def lambda_handler(event, content):
     username = data["userName"]
     repository_name = data["repositoryName"]
 
-    response = requests.get('https://api.github.com/users/ogty/zenn-content')
+    response = requests.get('https://api.github.com/users/ogty/requirements.txt-generator')
     try:
         response.raise_for_status()
     except HTTPError as e:
