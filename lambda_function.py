@@ -90,13 +90,12 @@ class GenerateTree:
             self.below_second_level(next_path)
 
     def get_first_level_files_or_folders(self) -> List[str]:
-        repository_path = f"/{self.username}/{self.repository_name}"
-        url = urljoin("https://github.com/", repository_path)
+        url = urljoin("https://github.com/", self.repository_path)
         html = requests.get(url)
         soup = BeautifulSoup(html.content, "html.parser")
         paths_for_repository = [i.get("href") for i in soup.find_all("a")]
 
-        process = [f"url.startswith('{repository_path}/{i}/{self.default_branch}')" for i in ["blob", "tree"]]
+        process = [f"url.startswith('{self.repository_path}/{i}/{self.default_branch}')" for i in ["blob", "tree"]]
         process_word = " or ".join(process)
 
         result = set()
