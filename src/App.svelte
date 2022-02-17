@@ -1,5 +1,37 @@
 <script>
+	import { createForm } from 'felte'
+	import { validator } from '@felte/validator-yup'
+	import * as yup from 'yup'
+	
 	import Folder from './components/Folder.svelte';
+
+	const schema = yup.object({
+    	username: yup.string().required(),
+    	repositoryName: yup.string().required(),
+	})
+
+	const { form, errors } = createForm({
+		extend: validator,
+		validateSchema: schema,
+		onSubmit: async (values) => {
+			send(JSON.stringify(values, null, 2))
+		},
+	})
+
+	let username;
+	let repositoryName;
+
+	let promise;
+	function send(bodyContent) {
+		promise = fetch("https://www.google.com/", {
+			mode: "cors",
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: bodyContent,
+		}).then((x) => x.json());
+	};
 
 	let root = [
 		{
@@ -87,4 +119,25 @@
 	];
 </script>
 
-<Folder name="Home" files={root} expanded/>
+<form use:form on:submit|preventDefault autocomplete="off">
+	<input type="text" name="username" placeholder="username" bind:value="{username}"><br>
+	<input type="text" name="repositoryName" placeholder="repository" bind:value="{repositoryName}"><br>
+	<button type="submit">submit</button>
+	{JSON.stringify($errors)}
+</form>
+
+{#await promise}
+Loading...
+{:then data} 
+{#if data}
+<Folder name="{repositoryName}" files={data} expanded/>
+{:else}
+nothing
+{/if}
+{:catch error}
+{error}
+{/await}
+
+<hr>
+
+<Folder name="HOME" files={root} expanded/>
