@@ -80,8 +80,8 @@ class GenerateTree:
         if parent == self.repository_name:
             self.root[self.repository_name].append(result)
 
-        for file in next_paths:
-            self.below_second_level(file)
+        for next_path in next_paths:
+            self.below_second_level(next_path)
 
     def get_first_level_files_or_folders(self) -> List[str]:
         repository_path = f"/{self.username}/{self.repository_name}"
