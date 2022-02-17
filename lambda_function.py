@@ -29,17 +29,19 @@ class GenerateTree:
         self.repository_path = repository_path
         self.default_branch = default_branch
 
-        self.root = {
-            repository_name: []
-        }
+        self.folders = []
 
         files_or_folders = self.get_first_level_files_or_folders()
         for file_or_folder in files_or_folders:
             self.below_second_level(file_or_folder)
 
     def below_second_level(self, path: str) -> None:
+        file_or_folder = path \
+            .replace(f"{self.repository_path}/blob/{self.default_branch}/", "") \
+            .replace(f"{self.repository_path}/tree/{self.default_branch}/", "") \
+
         result = {
-            "name": path.split("/")[-1],
+            "name": file_or_folder,
             "files": []
         } 
 
@@ -68,17 +70,15 @@ class GenerateTree:
             if eval(process_word):
                 if not url.startswith(path):
                     result["files"].append({"name": url.split("/")[-1]})
-                    self.xxx.append(url)
+                    next_paths.append(url)
                 elif "/" in url.replace(path, ""):
                     result["files"].append({"name": url.split("/")[-1]})
                     next_paths.append(url)
 
         if not result["files"]:
             result.pop("files")
-
-        parent = path.split("/")[-2] if path.split("/")[-2] != self.default_branch else self.repository_name
-        if parent == self.repository_name:
-            self.root[self.repository_name].append(result)
+        else: 
+            self.folders.append(result)
 
         for next_path in next_paths:
             self.below_second_level(next_path)
@@ -102,7 +102,26 @@ class GenerateTree:
         return result
 
     def __call__(self) -> Dict[str, list]:
-        return self.root
+        for parents in self.folders:
+            for search_target in self.folders:
+                if search_target["name"].startswith(f"{parents['name']}/"):
+                    count = 0
+                    child = search_target["name"].split("/")[-1]
+                    for parent in parents["files"]:
+                        if parent["name"] == child:
+                            parents["files"].pop(count)
+                        count += 1
+                        
+                    parents["files"].append({
+                        "name": child, 
+                        "files": search_target["files"]
+                    })
+
+        self.folders = list(filter(lambda x: not "/" in x["name"], self.folders))
+
+        return {
+            self.repository_name: self.folders
+        }
 
 
 def lambda_handler(event, content):
@@ -136,5 +155,5 @@ def lambda_handler(event, content):
 
 if __name__ == "__main__":
     import pprint
-    result = GenerateTree("ogty", "unittest-gs", "/ogty/unittest-gs", "master")
+    result = GenerateTree("ogty", "rust-gs", "/ogty/rust-gs", "master")
     pprint.pprint(result())
