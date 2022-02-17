@@ -33,90 +33,38 @@
 		}).then((x) => x.json());
 	};
 
-	let root = [
-		{
-			'name': 'settings.py'
-		}, 
-		{
-			'name': 'src', 
-			'files': [
-				{
-					'name': 'README.md'
-				}, 
-				{
-					'name': 'analizer.py'
-				}, 
-				{
-					'name': 'bollinger_band_counter.py'
-				}, 
-				{
-					'name': 'code_acquisition.py'
-				}, 
-				{
-					'name': 'dataframe_slicer.py'
-				}, 
-				{
-					'name': 'download_update.py'
-				}, 
-				{
-					'name': 'historical_volatirity.py'
-				}, 
-				{
-					'name': 'loading.py'
-				}, 
-				{
-					'name': 'market_data_acquisition.py'
-				}, 
-				{
-					'name': 'market_trend.py'
-				}, 
-				{
-					'name': 'schedule_generator.py'
-				}, 
-				{
-					'name': 'stock_data_acquisition.py'
-				}, 
-				{
-					'name': 'text_length_counter.py'
-				}, 
-				{
-					'name': 'totalling.py'
-				}
-			]
-		}, 
-		{
-			'name': 'README.md'
-		}, 
-		{
-			'name': 'data', 
-			'files': [
-				{
-					'name': 'JP.csv'
-				}, 
-				{
-					'name': 'historical_volatility.png'
-				}, 
-				{
-					'name': 'sample.png'
-				}, 
-				{
-					'name': 'totalling_sample.png'
-				}, 
-				{
-					'name': 'totalling_template.txt'
-				}
-			]
-		}, 
-		{
-			'name': 'requirements.txt'
-		}, 
-		{
-			'name': '.gitignore'
-		}, 
-		{
-			'name': 'main.py'
-		}
-	];
+	let root = [{'files': [{'name': 'config.json'},
+                                           {'files': [{'name': 'main.css'},
+                                                      {'name': 'style.min.css'}],
+                                            'name': 'css'},
+                                           {'files': [{'name': '32px.png'},
+                                                      {'name': 'demo.gif'},
+                                                      {'name': 'download_for_linux.png'},
+                                                      {'name': 'download_for_mac.png'},
+                                                      {'name': 'download_for_windows.png'},
+                                                      {'name': 'file_type_pip.png'},
+                                                      {'name': 'launch_in_browser.png'},
+                                                      {'name': 'throbber.gif'}],
+                                            'name': 'images'},
+                                           {'files': [{'name': 'jstree.min.js'},
+                                                      {'name': 'main.js'}],
+                                            'name': 'js'}],
+                                 'name': 'static'},
+                                {'name': 'requirements.txt'},
+                                {'name': 'settings.py'},
+                                {'name': 'app.py'},
+                                {'name': 'LICENSE'},
+                                {'name': '.gitignore'},
+                                {'files': [{'name': 'base.py'},
+                                           {'name': 'routes.py'}],
+                                 'name': 'src'},
+                                {'files': [{'name': 'main.py'},
+                                           {'name': 'test_install.py'}],
+                                 'name': 'test'},
+                                {'name': 'README.md'},
+                                {'name': 'main.py'},
+                                {'files': [{'name': 'main.html'}],
+                                 'name': 'templates'}]
 </script>
 
 <form use:form on:submit|preventDefault autocomplete="off">
@@ -140,4 +88,4 @@ nothing
 
 <hr>
 
-<Folder name="HOME" files={root} expanded/>
+<Folder name="requirements.txt-generator" files={root} expanded/>

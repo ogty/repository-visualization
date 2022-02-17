@@ -75,10 +75,16 @@ class GenerateTree:
                     result["files"].append({"name": url.split("/")[-1]})
                     next_paths.append(url)
 
-        if not result["files"]:
-            result.pop("files")
-        else: 
+        parent = path.split("/")[-2] if path.split("/")[-2] != self.default_branch else self.repository_name
+        if parent == self.repository_name:
+            if not result["files"]:
+                result.pop("files")
             self.folders.append(result)
+        else:
+            if not result["files"]:
+                result.pop("files")
+            else: 
+                self.folders.append(result)
 
         for next_path in next_paths:
             self.below_second_level(next_path)
@@ -155,5 +161,9 @@ def lambda_handler(event, content):
 
 if __name__ == "__main__":
     import pprint
-    result = GenerateTree("ogty", "rust-gs", "/ogty/rust-gs", "master")
+    import time
+
+    start = time.time()
+    result = GenerateTree("ogty", "requirements.txt-generator", "/ogty/requirements.txt-generator", "master")
     pprint.pprint(result())
+    print(time.time() - start)
