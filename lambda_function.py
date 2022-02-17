@@ -23,11 +23,12 @@ class LambdaException(Exception):
 
 class GenerateTree:
     
-    def __init__(self, username: str, repository_name: str, default_branch: str) -> None:
+    def __init__(self, username: str, repository_name: str, repository_path: str, default_branch: str) -> None:
         self.username = username
         self.repository_name = repository_name
+        self.repository_path = repository_path
         self.default_branch = default_branch
-        self.repository_path = f"/{self.username}/{self.repository_name}"
+
         self.root = {
             repository_name: []
         }
@@ -37,7 +38,6 @@ class GenerateTree:
             self.below_second_level(file_or_folder)
 
     def below_second_level(self, path: str) -> None:
-        print(path)
         result = {
             "name": path.split("/")[-1],
             "files": []
@@ -66,10 +66,9 @@ class GenerateTree:
         next_paths = []
         for url in paths_for_repository:
             if eval(process_word):
-                # TODO: something
                 if not url.startswith(path):
                     result["files"].append({"name": url.split("/")[-1]})
-                    next_paths.append(url)
+                    self.xxx.append(url)
                 elif "/" in url.replace(path, ""):
                     result["files"].append({"name": url.split("/")[-1]})
                     next_paths.append(url)
@@ -83,7 +82,7 @@ class GenerateTree:
 
         for file in next_paths:
             self.below_second_level(file)
-    
+
     def get_first_level_files_or_folders(self) -> List[str]:
         repository_path = f"/{self.username}/{self.repository_name}"
         url = urljoin("https://github.com/", repository_path)
@@ -110,8 +109,10 @@ def lambda_handler(event, content):
     data = ast.literal_eval(event["body"])
     username = data["userName"]
     repository_name = data["repositoryName"]
+    repository_path = f"/{username}/{repository_name}"
+    
+    response = requests.get(urljoin("https://api.github.com/users/", repository_path))
 
-    response = requests.get("https://api.github.com/users/ogty/requirements.txt-generator")
     try:
         response.raise_for_status()
     except HTTPError as e:
@@ -121,7 +122,8 @@ def lambda_handler(event, content):
     else:
         data = response.json()
         default_branch = data[0]["default_branch"]
-        body_cotent = GenerateTree(username, repository_name, default_branch)
+        body_cotent = GenerateTree(username, repository_name, repository_path, default_branch)
+
         return {
             "statusCode": 200,
             "headers": {
@@ -133,5 +135,6 @@ def lambda_handler(event, content):
         }
 
 if __name__ == "__main__":
-    result = GenerateTree("ogty", "uiux", "master")
-    print(result())
+    import pprint
+    result = GenerateTree("ogty", "unittest-gs", "/ogty/unittest-gs", "master")
+    pprint.pprint(result())
