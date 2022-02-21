@@ -9,7 +9,7 @@ from requests.exceptions import RequestException, HTTPError
 
 
 class LambdaException(Exception):
-    
+
     def __init__(self, status_code: int, error_message: str) -> None:
         self.status_code = status_code
         self.error_message = error_message
@@ -22,7 +22,7 @@ class LambdaException(Exception):
 
 
 class GenerateTree:
-    
+
     def __init__(self, username: str, repository_name: str, repository_path: str, default_branch: str) -> None:
         self.username = username
         self.repository_name = repository_name
@@ -43,7 +43,7 @@ class GenerateTree:
         result = {
             "name": file_or_folder,
             "files": []
-        } 
+        }
 
         blob_or_tree_path = path \
             .replace(f"{self.repository_path}/tree", self.repository_path) \
@@ -52,10 +52,10 @@ class GenerateTree:
 
         blob_path = blob_or_tree_path.copy()
         tree_path = blob_or_tree_path.copy()
-        
+
         blob_path.insert(3, "blob")
         tree_path.insert(3, "tree")
-        
+
         blob_path = "/".join(blob_path)
         tree_path = "/".join(tree_path)
 
@@ -75,7 +75,8 @@ class GenerateTree:
                     result["files"].append({"name": url.split("/")[-1]})
                     next_paths.append(url)
 
-        parent = path.split("/")[-2] if path.split("/")[-2] != self.default_branch else self.repository_name
+        parent = path.split(
+            "/")[-2] if path.split("/")[-2] != self.default_branch else self.repository_name
         if parent == self.repository_name:
             if not result["files"]:
                 result.pop("files")
@@ -83,7 +84,7 @@ class GenerateTree:
         else:
             if not result["files"]:
                 result.pop("files")
-            else: 
+            else:
                 self.folders.append(result)
 
         for next_path in next_paths:
@@ -95,11 +96,12 @@ class GenerateTree:
         soup = BeautifulSoup(html.content, "html.parser")
         paths_for_repository = [i.get("href") for i in soup.find_all("a")]
 
-        process = [f"url.startswith('{self.repository_path}/{i}/{self.default_branch}')" for i in ["blob", "tree"]]
+        process = [
+            f"url.startswith('{self.repository_path}/{i}/{self.default_branch}')" for i in ["blob", "tree"]]
         process_word = " or ".join(process)
 
         result = set()
-        for url in paths_for_repository: 
+        for url in paths_for_repository:
             if eval(process_word):
                 if url.count("/") == 5:
                     result.add(url)
@@ -116,13 +118,14 @@ class GenerateTree:
                         if parent["name"] == child:
                             parents["files"].pop(count)
                         count += 1
-                        
+
                     parents["files"].append({
-                        "name": child, 
+                        "name": child,
                         "files": search_target["files"]
                     })
 
-        self.folders = list(filter(lambda x: not "/" in x["name"], self.folders))
+        self.folders = list(
+            filter(lambda x: not "/" in x["name"], self.folders))
 
         return {
             self.repository_name: self.folders
@@ -134,8 +137,9 @@ def lambda_handler(event, content):
     username = data["userName"]
     repository_name = data["repositoryName"]
     repository_path = f"/{username}/{repository_name}"
-    
-    response = requests.get(urljoin("https://api.github.com/users/", repository_path))
+
+    response = requests.get(
+        urljoin("https://api.github.com/users/", repository_path))
 
     try:
         response.raise_for_status()
@@ -146,7 +150,8 @@ def lambda_handler(event, content):
     else:
         data = response.json()
         default_branch = data[0]["default_branch"]
-        body_cotent = GenerateTree(username, repository_name, repository_path, default_branch)
+        body_cotent = GenerateTree(
+            username, repository_name, repository_path, default_branch)
 
         return {
             "statusCode": 200,
@@ -158,11 +163,13 @@ def lambda_handler(event, content):
             "body": json.dumps(body_cotent)
         }
 
+
 if __name__ == "__main__":
     import pprint
     import time
 
     start = time.time()
-    result = GenerateTree("ogty", "requirements.txt-generator", "/ogty/requirements.txt-generator", "master")
+    result = GenerateTree("ogty", "requirements.txt-generator",
+                          "/ogty/requirements.txt-generator", "master")
     pprint.pprint(result())
     print(time.time() - start)
