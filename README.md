@@ -1,4 +1,4 @@
-# Repository Visualization
+# Repository Visualizer
 
 Just visualize the github repository
 
